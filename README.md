@@ -79,7 +79,7 @@ Un premier test a été réalisé avec une image claire contenant des informatio
 | Nom | Jean Dupont |
 | Date | 04/11/2026 |
 | Montant | 125,50 EUR |
-| Email | jean.dupont@example.com |
+| Email | jean.dupont@gmail.com |
 | Statut | completed |
 
 Les quatre champs attendus ont été correctement extraits sur cet exemple.
