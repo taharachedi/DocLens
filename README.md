@@ -1,30 +1,29 @@
-# DocLens
-<<<<<<< HEAD
+﻿# DocLens
 
-Application locale d'extraction d'informations depuis des documents PDF et des images. Projet personnel en cours de développement.
+Application locale d'extraction d'informations depuis des documents PDF et des images. Projet personnel en cours de d├®veloppement.
 
-## État réel du projet
+## ├ëtat r├®el du projet
 
-**Implémenté dans cette version :**
-- Interface Angular 19 pour sélectionner un fichier et afficher les résultats.
+**Impl├®ment├® dans cette version :**
+- Interface Angular 19 pour s├®lectionner un fichier et afficher les r├®sultats.
 - API REST Python / FastAPI (`POST /documents`, `GET /health`, `GET /`).
 - Lecture du texte natif des PDF avec PyMuPDF ; OCR Tesseract pour les pages sans texte exploitable et pour les images.
-- Extraction **par règles Python** de champs courants (nom, prénom, email, téléphone, dates, montant de facture, etc.). Les résultats doivent être vérifiés : il ne s'agit pas d'une extraction fiable sur tous les documents.
+- Extraction **par r├¿gles Python** de champs courants (nom, pr├®nom, email, t├®l├®phone, dates, montant de facture, etc.). Les r├®sultats doivent ├¬tre v├®rifi├®s : il ne s'agit pas d'une extraction fiable sur tous les documents.
 - Validation du format (PDF, PNG, JPG, JPEG), de la taille (10 Mo) et de la limite de pages PDF (10 pages).
 - Gestion des erreurs, messages d'avertissement, journaux techniques sans contenu des documents.
-- Tests automatisés pour les routes de base et certaines règles d'extraction.
+- Tests automatis├®s pour les routes de base et certaines r├¿gles d'extraction.
 
-**Non implémenté :** aucun appel à un LLM, aucune comparaison de prompts ou de modèles, aucune base PostgreSQL, aucun traitement Celery/Redis, aucun SSO, aucun déploiement cloud. Ce dépôt ne doit pas être présenté comme une solution de production.
+**Non impl├®ment├® :** aucun appel ├á un LLM, aucune comparaison de prompts ou de mod├¿les, aucune base PostgreSQL, aucun traitement Celery/Redis, aucun SSO, aucun d├®ploiement cloud. Ce d├®p├┤t ne doit pas ├¬tre pr├®sent├® comme une solution de production.
 
-## Prérequis
+## Pr├®requis
 
 - Python 3.11+ et Node.js compatible avec Angular 19.
-- Tesseract OCR installé sur le système. Pour le français, installer également les données de langue `fra` ; l'anglais `eng` est pris en charge.
-- Sur Windows, le code recherche Tesseract dans `C:\Program Files\Tesseract-OCR\tesseract.exe`. Sinon, l'exécutable `tesseract` doit être accessible via le `PATH`.
+- Tesseract OCR install├® sur le syst├¿me. Pour le fran├ºais, installer ├®galement les donn├®es de langue `fra` ; l'anglais `eng` est pris en charge.
+- Sur Windows, le code recherche Tesseract dans `C:\Program Files\Tesseract-OCR\tesseract.exe`. Sinon, l'ex├®cutable `tesseract` doit ├¬tre accessible via le `PATH`.
 
-## Démarrer le backend
+## D├®marrer le backend
 
-Dans un terminal à la racine du dépôt :
+Dans un terminal ├á la racine du d├®p├┤t :
 
 ```powershell
 cd backend
@@ -34,11 +33,11 @@ python -m pip install -r requirements.txt
 uvicorn main:app --reload
 ```
 
-Sur Linux/macOS, remplacer la création et l'activation par `python3 -m venv .venv` puis `source .venv/bin/activate`.
+Sur Linux/macOS, remplacer la cr├®ation et l'activation par `python3 -m venv .venv` puis `source .venv/bin/activate`.
 
 Documentation de l'API : http://127.0.0.1:8000/docs
 
-## Démarrer le frontend
+## D├®marrer le frontend
 
 Dans un **second terminal** :
 
@@ -48,7 +47,7 @@ npm ci
 npm start
 ```
 
-Ouvrir http://localhost:4200, sélectionner un document puis lancer l'analyse. Le backend doit être démarré en parallèle.
+Ouvrir http://localhost:4200, s├®lectionner un document puis lancer l'analyse. Le backend doit ├¬tre d├®marr├® en parall├¿le.
 
 ## Tests
 
@@ -69,33 +68,30 @@ Navigateur Angular :4200
         v
 FastAPI :8000
         |-- PyMuPDF : texte PDF natif
-        |-- Tesseract : OCR des images / pages scannées
-        |-- Règles Python : champs détectés
+        |-- Tesseract : OCR des images / pages scann├®es
+        |-- R├¿gles Python : champs d├®tect├®s
         v
-Réponse JSON -> interface Angular
+R├®ponse JSON -> interface Angular
 ```
 
-Les fichiers sont traités en mémoire. Cette version ne conserve pas les documents et n'envoie pas leur contenu vers un service LLM. Éviter d'utiliser de vrais documents sensibles lors des démonstrations.
+Les fichiers sont trait├®s en m├®moire. Cette version ne conserve pas les documents et n'envoie pas leur contenu vers un service LLM. ├ëviter d'utiliser de vrais documents sensibles lors des d├®monstrations.
 
 ## Limites connues
 
-- Les champs sont détectés par expressions régulières et libellés : ils peuvent être incomplets ou inexacts.
-- La qualité de l'OCR dépend du scan et des langues installées.
-- Le traitement est synchrone ; les lots et le suivi des tâches ne sont pas disponibles.
-- Les PDF numériques sont lus directement ; les PDF scannés passent par l'OCR.
-- Pas d'authentification, de persistance ou de garanties de sécurité de production.
+- Les champs sont d├®tect├®s par expressions r├®guli├¿res et libell├®s : ils peuvent ├¬tre incomplets ou inexacts.
+- La qualit├® de l'OCR d├®pend du scan et des langues install├®es.
+- Le traitement est synchrone ; les lots et le suivi des t├óches ne sont pas disponibles.
+- Les PDF num├®riques sont lus directement ; les PDF scann├®s passent par l'OCR.
+- Pas d'authentification, de persistance ou de garanties de s├®curit├® de production.
 
-## Améliorations envisagées (non réalisées)
+## Am├®liorations envisag├®es (non r├®alis├®es)
 
-1. Ajouter une intégration LLM **optionnelle** et configurable, avec validation Pydantic des sorties et gestion des secrets.
-2. Ajouter l'import de lots, une file de tâches asynchrones et des statuts consultables.
-3. Enregistrer les expérimentations dans PostgreSQL et comparer les résultats à une vérité terrain.
-4. Ajouter des tests d'intégration OCR sur des documents de démonstration anonymisés.
-5. Ajouter monitoring, métriques, authentification et pipeline CI/CD avant tout déploiement.
+1. Ajouter une int├®gration LLM **optionnelle** et configurable, avec validation Pydantic des sorties et gestion des secrets.
+2. Ajouter l'import de lots, une file de t├óches asynchrones et des statuts consultables.
+3. Enregistrer les exp├®rimentations dans PostgreSQL et comparer les r├®sultats ├á une v├®rit├® terrain.
+4. Ajouter des tests d'int├®gration OCR sur des documents de d├®monstration anonymis├®s.
+5. Ajouter monitoring, m├®triques, authentification et pipeline CI/CD avant tout d├®ploiement.
 
-## Confidentialité
+## Confidentialit├®
 
-Ne jamais publier de documents personnels, de clés API, de fichiers `.env` ou de bases de données dans le dépôt Git. Le `.gitignore` exclut les environnements virtuels et les dépendances installées.
-=======
-Application d'extraction d'informations à partir de documents avec Angular, FastAPI et Tesseract OCR.
->>>>>>> c8f1755738028b22aff8e41a572d44ac941be38a
+Ne jamais publier de documents personnels, de cl├®s API, de fichiers `.env` ou de bases de donn├®es dans le d├®p├┤t Git. Le `.gitignore` exclut les environnements virtuels et les d├®pendances install├®es.
