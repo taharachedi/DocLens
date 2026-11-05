@@ -1,4 +1,5 @@
 # DocLens
+<<<<<<< HEAD
 
 Application locale d'extraction d'informations depuis des documents PDF et des images. Projet personnel en cours de développement.
 
@@ -95,3 +96,6 @@ Les fichiers sont traités en mémoire. Cette version ne conserve pas les docume
 ## Confidentialité
 
 Ne jamais publier de documents personnels, de clés API, de fichiers `.env` ou de bases de données dans le dépôt Git. Le `.gitignore` exclut les environnements virtuels et les dépendances installées.
+=======
+Application d'extraction d'informations à partir de documents avec Angular, FastAPI et Tesseract OCR.
+>>>>>>> c8f1755738028b22aff8e41a572d44ac941be38a
