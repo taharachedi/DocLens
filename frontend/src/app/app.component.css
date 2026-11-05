@@ -1,0 +1,185 @@
+
+:host {
+  display: block;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #17233b;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 24px auto;
+  padding: 48px 40px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 10px 35px rgba(20, 40, 80, 0.07);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.header h1 {
+  font-size: 46px;
+  color: #4c63f1;
+  margin: 0 0 18px;
+}
+
+.header p {
+  color: #61708b;
+  font-size: 18px;
+}
+
+.panel {
+  background: #f7f9fc;
+  border: 1px solid #dce5f1;
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 28px;
+}
+
+h2 {
+  color: #3045b7;
+  font-size: 28px;
+  margin-top: 0;
+}
+
+h3 {
+  font-size: 19px;
+  margin-top: 24px;
+}
+
+input[type="file"] {
+  display: block;
+  max-width: 100%;
+  margin: 26px 0;
+  padding: 16px;
+  border: 2px dashed #a9c5ff;
+  border-radius: 10px;
+  background: white;
+}
+
+.filename {
+  color: #52627e;
+}
+
+button {
+  background: #4b63f1;
+  border: none;
+  border-radius: 10px;
+  padding: 15px 26px;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  background: #344bd5;
+}
+
+button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.info-card {
+  background: white;
+  border-radius: 10px;
+  padding: 16px;
+  overflow-wrap: anywhere;
+}
+
+.info-card p {
+  margin-bottom: 0;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid #d2dce9;
+  margin: 30px 0;
+}
+
+.field {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr);
+  gap: 15px;
+  background: white;
+  border-radius: 9px;
+  padding: 15px;
+  margin-bottom: 12px;
+  overflow-wrap: anywhere;
+}
+
+.field strong {
+  color: #344bc7;
+}
+
+.warning {
+  margin-top: 20px;
+  padding: 18px;
+  border: 1px solid #efd17d;
+  background: #fff9e8;
+  border-radius: 10px;
+}
+
+.warning h3 {
+  margin-top: 0;
+}
+
+.ocr-text {
+  background: #e4e9f1;
+  border-radius: 10px;
+  padding: 22px;
+  font-family: Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 450px;
+  overflow-y: auto;
+}
+
+.error {
+  color: #b91c1c;
+  font-weight: bold;
+}
+
+.note {
+  color: #64748b;
+  font-size: 13px;
+}
+
+@media (max-width: 700px) {
+  .container {
+    margin: 0;
+    padding: 22px 14px;
+  }
+
+  .panel {
+    padding: 20px;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .field {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .header h1 {
+    font-size: 34px;
+  }
+}

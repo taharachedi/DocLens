@@ -1,0 +1,100 @@
+
+<div class="container">
+
+  <header class="header">
+    <h1>📄 DocLens</h1>
+    <p>Extraction intelligente d'informations dans les documents</p>
+  </header>
+
+  <section class="panel">
+    <h2>Importer un document</h2>
+
+    <p>Sélectionnez un fichier PDF ou une image (PDF, PNG, JPG, JPEG).</p>
+
+    <input
+      type="file"
+      accept=".pdf,.png,.jpg,.jpeg"
+      (change)="selectionnerFichier($event)"
+    />
+
+    <p class="filename" *ngIf="fichier">
+      Fichier sélectionné : {{ fichier.name }}
+    </p>
+
+    <button
+      type="button"
+      (click)="analyserDocument()"
+      [disabled]="!fichier || chargement"
+    >
+      {{ chargement ? 'Analyse en cours...' : 'Analyser le document' }}
+    </button>
+
+    <p class="error" *ngIf="erreur">
+      {{ erreur }}
+    </p>
+  </section>
+
+  <section class="panel" *ngIf="resultat as r">
+
+    <h2>Résultats de l'extraction</h2>
+
+    <h3>Informations générales</h3>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <strong>Fichier</strong>
+        <p>{{ r.filename }}</p>
+      </div>
+
+      <div class="info-card">
+        <strong>Statut</strong>
+        <p>{{ r.status }}</p>
+      </div>
+
+      <div class="info-card">
+        <strong>Type de document</strong>
+        <p>{{ r.document_type }}</p>
+      </div>
+
+      <div class="info-card">
+        <strong>Méthode d'extraction</strong>
+        <p>{{ r.extraction_method }}</p>
+      </div>
+    </div>
+
+    <hr />
+
+    <h3>Champs détectés</h3>
+
+    <div *ngIf="champsDetectes().length; else aucunChamp">
+      <div class="field" *ngFor="let champ of champsDetectes()">
+        <strong>{{ champ.label }}</strong>
+        <span>{{ champ.valeur }}</span>
+      </div>
+    </div>
+
+    <ng-template #aucunChamp>
+      <p>Aucun champ structuré détecté avec suffisamment de fiabilité.</p>
+    </ng-template>
+
+    <div class="warning" *ngIf="r.warnings.length">
+      <h3>Points à vérifier</h3>
+      <p *ngFor="let warning of r.warnings">
+        {{ warning }}
+      </p>
+    </div>
+
+    <hr />
+
+    <h3>Texte complet extrait</h3>
+
+    <pre class="ocr-text">{{ r.extracted_text || 'Aucun texte détecté.' }}</pre>
+
+    <p class="note">
+      Les résultats OCR peuvent contenir des erreurs.
+      Vérifiez les informations importantes dans le document original.
+    </p>
+
+  </section>
+
+</div>

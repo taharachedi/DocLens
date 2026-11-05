@@ -1,0 +1,22 @@
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+# Angular
+node_modules/
+.angular/
+dist/
+coverage/
+# Secrets and local data
+.env
+.env.*
+!.env.example
+*.sqlite3
+uploads/
+*.log
+# Editors / OS
+.DS_Store
+Thumbs.db
+.vscode/
