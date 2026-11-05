@@ -2,209 +2,268 @@
 
 **Intelligent Document Extraction & Analysis**
 
-`Angular 19` · `Python 3.11+` · `FastAPI` · `Tesseract OCR` · `PyMuPDF` · `Pillow`
+`Angular 19` · `TypeScript` · `Python 3.11+` · `FastAPI` · `Tesseract OCR` · `PyMuPDF` · `Pillow`
 
-DocLens est une application web permettant d'analyser des documents PDF et des images afin d'en extraire automatiquement le texte et les informations structurées.
+**Statut : Prototype fonctionnel en local — développement et améliorations en cours.**
 
-L'application combine l'extraction de texte des PDF numériques, la reconnaissance optique de caractères (OCR) et des règles intelligentes de détection pour identifier différents types de documents et leurs informations principales.
+---
 
-Le projet est développé avec Angular pour l'interface utilisateur et Python/FastAPI pour le traitement documentaire.
+## Présentation
 
-## Fonctionnalités
+**DocLens** est une application web d'analyse documentaire permettant d'importer des fichiers PDF ou des images, d'en extraire automatiquement le texte et d'identifier certaines informations structurées.
+
+L'application combine trois approches :
+
+- **Extraction PDF** : récupération directe du texte des documents numériques avec PyMuPDF.
+- **Reconnaissance OCR** : lecture du texte présent dans les images et documents scannés avec Tesseract.
+- **Extraction structurée** : analyse du texte à l'aide de règles Python pour détecter des informations telles que les noms, dates, adresses email et montants.
+
+Le projet repose sur une architecture frontend/backend avec **Angular 19** pour l'interface utilisateur et **Python/FastAPI** pour le traitement documentaire.
+
+L'objectif est de développer progressivement un outil simple à utiliser, capable d'analyser différents documents tout en améliorant la précision et la fiabilité des résultats.
+
+## Fonctionnalités actuelles
 
 ### 1. Import et validation des documents
+
 - Import de fichiers PDF, PNG, JPG et JPEG.
-- Taille maximale : 10 Mo.
+- Taille maximale de 10 Mo par fichier.
 - Limite de 10 pages par document PDF.
-- Vérification du format et de la validité des fichiers.
+- Vérification du format et gestion des fichiers invalides.
+- Affichage de messages d'erreur en cas de problème.
 
-### 2. Extraction intelligente du texte
-- Extraction directe du texte des PDF numériques avec PyMuPDF.
-- Reconnaissance OCR des images et des documents scannés avec Tesseract.
-- Prétraitement des images : redimensionnement, amélioration du contraste, netteté et binarisation.
-- Redressement des images pour améliorer la reconnaissance.
-- Estimation de la confiance de reconnaissance OCR.
+### 2. Extraction du texte
 
-### 3. Détection automatique du type de document
+**Documents PDF numériques**
 
-DocLens identifie plusieurs catégories de documents :
+Le texte est extrait directement avec PyMuPDF lorsqu'il est disponible.
 
-- Passeport.
-- Carte d'identité.
-- Facture.
+**Images et documents scannés**
+
+Tesseract OCR permet de reconnaître les caractères présents dans les images et les pages PDF sans texte exploitable.
+
+La qualité des résultats dépend notamment de la résolution, de la netteté, de l'orientation et de la lisibilité du document.
+
+### 3. Identification des documents
+
+DocLens utilise le contenu textuel pour identifier certaines catégories documentaires.
+
+Les catégories prises en compte peuvent notamment comprendre :
+
+- Factures.
+- Passeports et documents d'identité.
 - CV.
-- Contrat.
-- Attestation.
-- Autres documents.
+- Contrats et attestations.
+- Documents non classés.
 
-### 4. Extraction des informations
+Cette classification repose sur des règles et des indices textuels. Elle peut donc être incomplète ou incorrecte.
 
-L'application peut identifier différentes informations selon le contenu du document :
+### 4. Extraction des informations structurées
 
-| Catégorie | Informations détectées |
+DocLens recherche automatiquement plusieurs types d'informations dans le texte extrait.
+
+| Catégorie | Exemples d'informations |
 |---|---|
-| Identité | Nom, prénom, sexe, nationalité |
-| Dates | Date, naissance, délivrance, expiration |
+| Identité | Nom, prénom |
 | Contact | Adresse email, téléphone |
-| Documents | Numéro de document |
-| Finances | Montant, IBAN |
-| Passeports | Informations structurées de la zone MRZ |
+| Dates | Dates présentes dans le document |
+| Finances | Montants de facture |
+| Documents administratifs | Informations détectables à partir du texte |
 
-### 5. Reconnaissance MRZ des passeports
+Les champs réellement retournés dépendent du document et des règles d'extraction disponibles.
 
-DocLens intègre un traitement spécifique des zones MRZ (Machine Readable Zone) des passeports.
+**Important :** les informations ne sont pas garanties exactes et doivent être vérifiées à partir du document original.
 
-- Détection des lignes MRZ.
-- Prise en charge des formats TD1 et TD3.
-- Extraction des informations d'identité.
-- Vérification des chiffres de contrôle.
-- Correction de certaines confusions de caractères OCR.
+### 5. Traitement des documents d'identité
 
-### 6. Résultats et gestion des erreurs
+Les passeports et cartes d'identité représentent des documents plus complexes en raison de leur mise en page, de la présence de plusieurs langues et de la qualité variable des images.
 
-- Affichage du texte extrait.
-- Présentation des informations détectées.
-- Identification de la méthode d'extraction utilisée.
-- Affichage du niveau de confiance OCR lorsqu'il est disponible.
-- Messages d'avertissement lorsque la reconnaissance est insuffisante.
+DocLens peut récupérer leur texte par OCR, mais l'extraction fiable de tous les champs d'identité nécessite encore des améliorations.
+
+L'exploitation avancée de la **MRZ (Machine Readable Zone)**, notamment la validation des chiffres de contrôle et la prise en charge complète des différents formats, fait partie des points techniques à consolider et à tester.
+
+### 6. Affichage des résultats
+
+Après l'analyse d'un document, l'interface présente :
+
+- Le nom du fichier traité.
+- Le statut du traitement.
+- Le type de document identifié.
+- La méthode d'extraction utilisée.
+- Les informations détectées.
+- Le texte complet extrait.
+- Les avertissements éventuels.
+
+L'utilisateur peut ainsi consulter les résultats et identifier les informations nécessitant une vérification.
+
+## Exemples de fonctionnement
+
+### Exemple 1 — Facture fictive
+
+Sur une image simple et lisible contenant un nom, une date, un montant et une adresse email, DocLens peut identifier les informations suivantes :
+
+| Champ | Résultat d'exemple |
+|---|---|
+| Type de document | Facture |
+| Nom | Jean Dupont |
+| Date | 04/11/2026 |
+| Montant | 125,50 EUR |
+| Email | jean.dupont@example.com |
+| Méthode | Tesseract OCR |
+
+Cet exemple illustre le fonctionnement de l'extraction sur un document de test simple.
+
+### Exemple 2 — Document d'identité
+
+Sur un passeport scanné, DocLens peut reconnaître une partie du texte et détecter certaines dates.
+
+Cependant, les informations d'identité peuvent être incomplètes ou incorrectes lorsque l'OCR rencontre des difficultés.
+
+L'application signale alors les limites de reconnaissance afin d'encourager la vérification manuelle.
+
+**Ces deux exemples montrent à la fois les possibilités actuelles de l'application et les améliorations encore nécessaires.**
 
 ## Architecture technique
 
-DocLens repose sur une architecture frontend/backend.
+DocLens utilise une architecture web séparant l'interface utilisateur du traitement documentaire.
 
-**Frontend — Angular 19**
+### Frontend — Angular 19
 
-Interface utilisateur permettant d'importer les documents et de consulter les résultats de l'analyse.
+Le frontend permet de sélectionner un fichier, de lancer son analyse et de consulter les informations extraites.
 
-**Backend — Python / FastAPI**
+### Backend — Python / FastAPI
 
-API REST responsable de la validation des fichiers, du traitement OCR, de l'extraction des informations et de la génération des résultats JSON.
+Le backend assure la validation des documents, la lecture des PDF, la reconnaissance OCR et l'extraction des champs.
+
+Il expose une API REST utilisée par Angular.
 
 ### Flux de traitement
 
 ```text
-                 UTILISATEUR
-                      |
-                      v
-               ANGULAR 19
-                localhost:4200
-                      |
-                      | HTTP POST
-                      | /documents
-                      v
-                FASTAPI
-                localhost:8000
-                      |
-                      v
-              VALIDATION FICHIER
-                      |
-                      v
+                UTILISATEUR
+                     |
+                     v
+              INTERFACE ANGULAR
+               localhost:4200
+                     |
+                     | POST /documents
+                     v
+                 FASTAPI
+               localhost:8000
+                     |
+                     v
+             VALIDATION DU FICHIER
+                     |
+                     v
              ANALYSE DU DOCUMENT
-                      |
-              +-------+-------+
-              |               |
-              v               v
-           PyMuPDF         Tesseract
-         PDF numérique      OCR
-                              |
-                     Prétraitement image
-                              |
-                     Reconnaissance MRZ
-              |               |
-              +-------+-------+
-                      |
-                      v
+                     |
+            +--------+--------+
+            |                 |
+            v                 v
+       PDF numérique     Image / PDF scanné
+            |                 |
+            v                 v
+         PyMuPDF       Préparation de l'image
+            |                 |
+            |                 v
+            |            Tesseract OCR
+            |                 |
+            +--------+--------+
+                     |
+                     v
                 TEXTE EXTRAIT
-                      |
-                      v
-             EXTRACTION DES CHAMPS
-                      |
-                      v
-              DÉTECTION DU DOCUMENT
-                      |
-                      v
-                 RÉSULTAT JSON
-                      |
-                      v
-                ANGULAR 19
+                     |
+                     v
+          DÉTECTION DU TYPE DE DOCUMENT
+                     |
+                     v
+           EXTRACTION DES INFORMATIONS
+                     |
+                     v
+              RÉPONSE JSON
+                     |
+                     v
+               INTERFACE ANGULAR
 ```
 
 ## Technologies utilisées
 
-| Technologie | Utilisation |
+| Technologie | Rôle |
 |---|---|
-| Angular 19 | Interface utilisateur |
+| Angular 19 | Interface web |
 | TypeScript | Développement frontend |
 | Python | Traitement documentaire |
 | FastAPI | API REST |
-| Pydantic | Validation et structuration des données |
-| PyMuPDF | Extraction du texte PDF |
-| Tesseract OCR | Reconnaissance de texte |
-| pytesseract | Intégration Python de Tesseract |
-| Pillow | Prétraitement des images |
-| pytest | Tests automatisés |
+| Pydantic | Validation et structuration des réponses |
+| PyMuPDF | Lecture et extraction des PDF |
+| Tesseract OCR | Reconnaissance optique des caractères |
+| pytesseract | Utilisation de Tesseract depuis Python |
+| Pillow | Manipulation et préparation des images |
+| pytest | Tests automatisés backend |
 
 ## Structure du projet
 
 ```text
 DocLens/
-│
-├── backend/
-│   ├── main.py
-│   ├── requirements.txt
-│   ├── requirements-dev.txt
-│   │
-│   └── tests/
-│       └── test_main.py
-│
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   │   ├── app/
-│   │   │   ├── app.component.ts
-│   │   │   ├── app.component.html
-│   │   │   ├── app.component.css
-│   │   │   └── app.component.spec.ts
-│   │   ├── main.ts
-│   │   └── styles.css
-│   │
-│   ├── angular.json
-│   ├── package.json
-│   └── package-lock.json
-│
-├── .gitignore
-└── README.md
+|
+|-- backend/
+|   |-- main.py
+|   |-- requirements.txt
+|   |-- requirements-dev.txt
+|   |
+|   `-- tests/
+|       `-- test_main.py
+|
+|-- frontend/
+|   |-- public/
+|   |-- src/
+|   |   |-- app/
+|   |   |-- main.ts
+|   |   `-- styles.css
+|   |
+|   |-- angular.json
+|   |-- package.json
+|   `-- package-lock.json
+|
+|-- .gitignore
+`-- README.md
 ```
+
+Le dossier `backend` contient l'API Python et les tests associés.
+
+Le dossier `frontend` contient l'application Angular, ses composants et sa configuration.
 
 ## Installation et exécution
 
 ### Prérequis
 
-- Python 3.11 ou supérieur.
-- Node.js et npm.
+Avant de commencer, installer :
+
+- Python 3.11 ou une version compatible supérieure.
+- Node.js et npm compatibles avec Angular 19.
 - Tesseract OCR.
 - Git.
 
-Tesseract doit être installé et accessible depuis le PATH.
-
-Sous Windows, l'installation standard se trouve généralement ici :
+Sous Windows, Tesseract est généralement installé dans :
 
 ```text
 C:\Program Files\Tesseract-OCR\tesseract.exe
 ```
 
-Pour la reconnaissance du français et de l'anglais, installer les données linguistiques `fra` et `eng`.
+Vérifier que Tesseract est accessible au programme et installer les données linguistiques nécessaires, notamment `fra` et `eng` pour le français et l'anglais.
 
-### 1. Cloner le dépôt
+### Étape 1 — Cloner le dépôt
 
-```bash
+Ouvrir PowerShell :
+
+```powershell
 git clone https://github.com/taharachedi/DocLens.git
 cd DocLens
 ```
 
-### 2. Installer et démarrer le backend
+### Étape 2 — Démarrer le backend
 
-Sous Windows PowerShell :
+Depuis la racine du projet :
 
 ```powershell
 cd backend
@@ -216,17 +275,15 @@ py -m venv .venv
 .\.venv\Scripts\python.exe -m uvicorn main:app --reload
 ```
 
-Le backend sera accessible à :
+Une fois le serveur démarré :
 
-http://127.0.0.1:8000
+**API :** http://127.0.0.1:8000
 
-Documentation interactive de l'API :
+**Documentation Swagger :** http://127.0.0.1:8000/docs
 
-http://127.0.0.1:8000/docs
+### Étape 3 — Démarrer le frontend
 
-### 3. Installer et démarrer le frontend
-
-Dans un deuxième terminal, depuis la racine du projet :
+Ouvrir un deuxième terminal PowerShell et se placer dans le dossier `frontend` du projet :
 
 ```powershell
 cd frontend
@@ -236,109 +293,151 @@ npm ci
 npm start
 ```
 
-L'interface sera accessible à :
+Ouvrir ensuite :
 
-http://localhost:4200
+**Application web :** http://localhost:4200
 
-Les deux services doivent être démarrés pour utiliser l'application.
+Les serveurs Angular et FastAPI doivent fonctionner simultanément.
+
+### Étape 4 — Utiliser l'application
+
+1. Ouvrir l'interface Angular.
+2. Sélectionner un fichier PDF ou une image.
+3. Lancer l'analyse.
+4. Consulter le type de document, les champs détectés et le texte extrait.
+5. Vérifier les résultats à partir du document original.
 
 ## API REST
+
+L'API FastAPI expose les endpoints suivants :
 
 | Méthode | Endpoint | Description |
 |---|---|---|
 | GET | `/` | Informations sur l'application |
-| GET | `/health` | Vérification de l'état de l'API |
+| GET | `/health` | Vérification de l'API |
 | POST | `/documents` | Import et analyse d'un document |
 
-L'endpoint `/documents` reçoit un fichier via `multipart/form-data`.
+L'endpoint `POST /documents` accepte un fichier envoyé avec le format `multipart/form-data`.
 
-La réponse JSON contient notamment :
+Selon la version de l'API, la réponse JSON peut contenir notamment :
 
 - `filename` : nom du fichier.
 - `status` : statut du traitement.
-- `document_type` : type de document identifié.
-- `extraction_method` : méthode d'extraction utilisée.
-- `extracted_text` : texte reconnu.
+- `document_type` : catégorie identifiée.
+- `extraction_method` : méthode de lecture utilisée.
+- `extracted_text` : texte extrait.
 - `fields` : informations structurées.
-- `champs` : liste des champs détectés.
-- `confiance_ocr` : estimation de la confiance OCR.
-- `processed_at` : date du traitement.
-- `warnings` : avertissements éventuels.
+- `warnings` : avertissements.
 
-## Tests et qualité
+La documentation interactive disponible sur `/docs` permet de consulter le schéma exact des requêtes et des réponses.
 
-Le dépôt contient des tests backend dans `backend/tests/`.
+## Tests et vérifications
 
-Installation des dépendances de développement :
+Le projet comprend des tests backend dans le dossier `backend/tests`.
+
+### Tests Python
+
+Depuis le dossier `backend`, avec l'environnement virtuel activé ou en utilisant son interpréteur :
 
 ```powershell
-cd backend
-python -m pip install -r requirements-dev.txt
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
+
+.\.venv\Scripts\python.exe -m pytest -q
 ```
 
-Exécution des tests :
+### Vérification Angular
+
+Depuis le dossier `frontend` :
 
 ```powershell
-python -m pytest -q
-```
-
-Compilation du frontend :
-
-```powershell
-cd frontend
 npm ci
+
 npm run build
 ```
 
-Ces vérifications ne constituent pas une garantie de précision de l'extraction sur tous les documents.
+Ces vérifications permettent de contrôler certains comportements techniques et la compilation, mais ne garantissent pas la précision de l'extraction documentaire.
 
 ## Limites actuelles
 
-DocLens est un projet personnel fonctionnel en environnement local, encore en développement.
+DocLens est un **projet personnel expérimental**, fonctionnel en local et en cours d'amélioration.
 
-Ses principales limites sont :
+Les principales limites sont les suivantes :
 
-- L'extraction structurée repose principalement sur des règles Python.
-- Aucun modèle LLM n'est actuellement intégré.
-- Les résultats dépendent de la qualité des documents et de l'OCR.
-- Certains champs peuvent être absents ou incorrectement détectés.
-- Le traitement est synchrone.
-- Le traitement de lots n'est pas encore disponible.
-- Aucune base de données ni authentification n'est intégrée.
-- L'application n'est pas encore déployée sur une infrastructure distante.
+- L'extraction structurée repose principalement sur des règles Python et non sur un modèle LLM.
+- La précision dépend fortement de la qualité des documents.
+- Certains champs peuvent être absents ou mal reconnus.
+- Les documents administratifs complexes nécessitent des traitements spécifiques.
+- Le traitement est actuellement synchrone.
+- L'analyse de lots n'est pas encore disponible.
+- Aucune base de données n'est intégrée.
+- L'application ne dispose pas encore d'un système d'authentification.
+- Aucun déploiement cloud n'est actuellement proposé.
 
-Les informations extraites doivent toujours être vérifiées à partir du document original.
+DocLens n'est pas destiné à être utilisé comme une solution de production pour des documents sensibles.
 
-## Améliorations envisagées
+## Perspectives d'amélioration
 
-- Amélioration continue de la reconnaissance OCR.
-- Intégration éventuelle d'un modèle LLM pour l'extraction structurée.
-- Traitement asynchrone et analyse de plusieurs documents.
-- Évaluation de la précision sur des jeux de données fictifs.
-- Ajout éventuel d'une base de données PostgreSQL.
-- Renforcement de la sécurité et de la couverture des tests.
-- Déploiement et intégration continue (CI/CD).
+Le développement du projet se poursuit autour de plusieurs axes.
 
-Ces évolutions sont des pistes de développement et ne sont pas toutes implémentées.
+### Amélioration de la reconnaissance documentaire
+
+- Renforcement de la qualité OCR.
+- Meilleure gestion des images difficiles.
+- Amélioration de la détection des types de documents.
+- Consolidation de l'extraction des champs d'identité.
+- Tests plus approfondis sur les zones MRZ.
+
+### Extraction assistée par intelligence artificielle
+
+- Étude d'une intégration optionnelle de modèles LLM.
+- Extraction structurée à partir de consignes configurables.
+- Validation des réponses générées.
+- Comparaison de plusieurs méthodes d'extraction.
+
+### Évaluation et fiabilité
+
+- Constitution de jeux de tests fictifs et anonymisés.
+- Mesure de la précision des champs extraits.
+- Comparaison des résultats avec des données de référence.
+- Amélioration de la couverture des tests automatisés.
+
+### Évolution de l'architecture
+
+- Traitement asynchrone.
+- Analyse de plusieurs documents.
+- Persistance éventuelle avec PostgreSQL.
+- Renforcement de la sécurité.
+- Mise en place d'une intégration continue et d'un déploiement.
+
+**Ces fonctionnalités représentent des perspectives de développement et ne doivent pas être considérées comme déjà implémentées.**
 
 ## Confidentialité et sécurité
 
-DocLens est destiné à des démonstrations et à des expérimentations locales.
+DocLens est actuellement destiné aux expérimentations et démonstrations locales.
 
-Les documents sont traités en mémoire et ne sont pas conservés par une base de données.
+Les documents sont traités sans base de données de stockage et aucun service LLM externe n'est intégré.
 
-Aucun service LLM externe n'est utilisé actuellement.
+Pour les démonstrations, il est recommandé d'utiliser uniquement des documents fictifs ou anonymisés.
 
-Il est recommandé d'utiliser uniquement des documents fictifs ou anonymisés. Ne publiez jamais de documents personnels, de clés API, de mots de passe ou de fichiers contenant des informations sensibles.
+Ne jamais publier dans le dépôt :
+
+- Des passeports, cartes d'identité ou documents personnels réels.
+- Des mots de passe ou clés API.
+- Des fichiers de configuration contenant des secrets.
+- Des données confidentielles.
 
 ## Auteur
 
 **Taha Rachedi**
 
-Projet personnel de développement web et d'analyse documentaire.
+Projet personnel de développement web, traitement documentaire et extraction d'informations.
 
-GitHub : https://github.com/taharachedi
+**GitHub :** https://github.com/taharachedi
+
+**Dépôt du projet :** https://github.com/taharachedi/DocLens
 
 ---
 
-*DocLens — Intelligent Document Extraction & Analysis.*
+*DocLens — Intelligent Document Extraction & Analysis*
+
+*Projet en développement continu.*
